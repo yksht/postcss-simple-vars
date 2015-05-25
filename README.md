@@ -1,7 +1,7 @@
 [postcss-simple-vars]: https://github.com/postcss/postcss-simple-vars
 [PostCSS]:             https://github.com/postcss/postcss
 
-This is a modified [postcss-simple-vars] plugin for [PostCSS]. It has similar functionality. Just added preventing overrides.
+This is a fork of [postcss-simple-vars] plugin for [PostCSS]. Only added preventing overrides.
 
 ## Example:
 
