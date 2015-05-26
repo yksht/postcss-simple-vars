@@ -1,8 +1,17 @@
 var postcss = require('postcss');
 
-var definition = function (variables, node) {
+var definition = function (variables, override, node) {
     var name = node.prop.slice(1);
-    variables[name] = node.value;
+    if ( override[name] === false ) {
+        return;
+    }
+    if ( node.value.indexOf('!const') != -1 ) {
+        override[name] = false;
+        variables[name] = node.value.replace('!const', '').trim();
+    } else {
+        override[name] = true;
+        variables[name] = node.value;
+    }
     node.removeSelf();
 };
 
@@ -60,6 +69,7 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
 
     return function (css) {
         var variables = { };
+        var override = { };
         if ( typeof opts.variables === 'function' ) {
             variables = opts.variables();
         } else if ( typeof opts.variables === 'object' ) {
@@ -73,7 +83,7 @@ module.exports = postcss.plugin('postcss-simple-vars', function (opts) {
                     declValue(variables, node, opts);
                 }
                 if ( node.prop[0] === '$' ) {
-                    if ( !opts.only ) definition(variables, node);
+                    if ( !opts.only ) definition(variables, override, node);
                 }
 
             } else if ( node.type === 'rule' ) {
