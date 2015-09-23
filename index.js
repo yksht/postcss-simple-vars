@@ -2,12 +2,13 @@ var postcss = require('postcss');
 
 var definition = function (variables, override, node) {
     var name = node.prop.slice(1);
+    var value = node.value;
+    node.remove();
     if ( override[name] >= 0 ) {
         return;
     }
-    override[name] = node.value.toString().indexOf('!const');
-    variables[name] = (override[name] === -1) ? node.value : node.value.toString().replace('!const', '').trim();
-    node.remove();
+    override[name] = value.toString().indexOf('!const');
+    variables[name] = (override[name] === -1) ? value : value.toString().replace('!const', '').trim();
 };
 
 var variable = function (variables, node, str, name, opts, result) {
